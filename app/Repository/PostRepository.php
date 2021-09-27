@@ -25,11 +25,13 @@ class PostRepository implements PostRepositoryInterface
     }
     public function show($id)
     {
+        $profile_photo = Auth::user()->profile_photo;
         $post = Post::findOrFail($id);
         $tags = community_tag::select('tag_name')->where('community_id', '=', $post->community_id)->get();
         $idsOfCommunities = community_tag::select('community_id')->whereIn('tag_name', '=', $tags)->get();
-        $Communities = Community::whereIn('id', '=', $idsOfCommunities)->get();
-        return view('Posts.showPost', compact('post', 'Communities'));
+        $Communities = Community::whereIn('id', '=', $idsOfCommunities)->orderBy('numberOfMembers', 'desc')->get();
+        $comments = DB::table('comments')->where('post_id', '=', $post->id)->get();
+        return view('Posts.showPost', compact('post', 'Communities', 'comments', 'profile_photo'));
     }
     public function create()
     {
@@ -38,13 +40,24 @@ class PostRepository implements PostRepositoryInterface
     public function store($request)
     {
         try {
+
+            $photo_extinsion = $request->post_image->getClientOriginalExtension();
+            $photo_name = time() . $photo_extinsion;
+            $path = 'images/upload';
+            $request->post_image->move($path, $photo_name);
+
+            $video_extinsion = $request->post_video->getClientOriginalExtension();
+            $video_name = time() . $video_extinsion;
+            $path = 'images/upload';
+            $request->post_image->move($path, $video_name);
+
             $post = new Post();
-            $post->post_title;
-            $post->post_image;
-            $post->post_video;
-            $post->post_body;
-            $post->post_url;
-            $post->post_privacy;
+            $post->post_title = $request->post_title;
+            $post->post_body = $request->post_body;
+            $post->post_url = $request->post_url;
+            $post->post_photo = $photo_name;
+            $post->post_video = $video_name;
+            $post->post_privacy = $request->post_privacy;
             $post->save();
             toastr()->success('Data Saved Completed');
             return redirect()->route('Posts.index');
@@ -60,13 +73,23 @@ class PostRepository implements PostRepositoryInterface
     public function update($request)
     {
         try {
+            $photo_extinsion = $request->post_image->getClientOriginalExtension();
+            $photo_name = time() . $photo_extinsion;
+            $path = 'images/upload';
+            $request->post_image->move($path, $photo_name);
+
+            $video_extinsion = $request->post_video->getClientOriginalExtension();
+            $video_name = time() . $video_extinsion;
+            $path = 'images/upload';
+            $request->post_image->move($path, $video_name);
+
             $post = Post::findOrFail($request->id);
-            $post->post_title;
-            $post->post_image;
-            $post->post_video;
-            $post->post_body;
-            $post->post_url;
-            $post->post_privacy;
+            $post->post_title = $request->post_title;
+            $post->post_body = $request->post_body;
+            $post->post_url = $request->post_url;
+            $post->post_photo = $photo_name;
+            $post->post_video = $video_name;
+            $post->post_privacy = $request->post_privacy;
             $post->save();
             toastr()->success('Data Updated Completed');
             return redirect()->route('Posts.index');
