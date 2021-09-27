@@ -39,6 +39,7 @@ class UsersController extends Controller
             return redirect()->route('Posts.index');
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+            
         }
     }
     public function destroy(Request $request)

@@ -40,7 +40,6 @@ class PostRepository implements PostRepositoryInterface
     public function store($request)
     {
         try {
-
             $photo_extinsion = $request->post_image->getClientOriginalExtension();
             $photo_name = time() . $photo_extinsion;
             $path = 'images/upload';
