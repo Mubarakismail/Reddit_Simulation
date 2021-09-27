@@ -81,7 +81,7 @@
                         <div class="tab-content" id="custom-tabs-four-tabContent">
                             <div class="tab-pane fade active show" id="custom-tabs-four-home" role="tabpanel"
                                 aria-labelledby="custom-tabs-four-home-tab">
-                                <form action="{{ route('Posts.store') }}" method="POST">
+                                <form action="{{ route('Posts.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group">
                                         <div class="col-md-6">
@@ -102,7 +102,7 @@
                             </div>
                             <div class="tab-pane fade" id="custom-tabs-four-profile" role="tabpanel"
                                 aria-labelledby="custom-tabs-four-profile-tab">
-                                <form action="{{ route('Posts.store') }}" method="POST">
+                                <form action="{{ route('Posts.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <div class="form-group">
                                         <div class="col-md-6">
