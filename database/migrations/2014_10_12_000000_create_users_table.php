@@ -23,9 +23,6 @@ class CreateUsersTable extends Migration
             $table->string('profile_photo');
             $table->string('geneder');
             $table->date('birth_date');
-            $table->string('education');
-            $table->string('bio');
-            $table->string('address');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
