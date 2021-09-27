@@ -82,5 +82,4 @@
             <!-- /.login-box -->
         </div>
     </div>
-    </div>
 @endsection

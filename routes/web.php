@@ -14,4 +14,5 @@ Route::group(['namespace' => '\App\Http\Controllers'], function () {
     Route::resource('Posts', 'PostController');
     Route::post('Users/update', 'UsersController@update')->name('Users.update');
     Route::post('Users/delete', 'UsersController@destroy')->name('Users.destroy');
+    
 });
