@@ -47,7 +47,7 @@
                             <img class="img-fluid pad" src="{{ asset('images/upload/$post->post_image') }}" alt="Photo">
                         @elseif (isset($post->post_video))
                             <video controls class="video-fluid">
-                                <source src="{{ asset('videos/upload/$post->post_video') }}" type="video">
+                                <source src="{{ asset('images/upload/$post->post_video') }}" type="video">
                             </video>
                         @endif
                         <!-- /.attachment-block -->
@@ -97,6 +97,7 @@
                                 <div class="img-push">
                                     <input type="text" class="form-control form-control-sm"
                                         placeholder="Press enter to post comment" name="comment_body">
+                                    <input type="hidden" class="form-control" value="{{ $post->id }}" name="post_id">
                                 </div>
                             </form>
                         </form>

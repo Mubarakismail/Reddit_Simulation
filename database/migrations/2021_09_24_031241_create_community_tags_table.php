@@ -16,7 +16,7 @@ class CreateCommunityTagsTable extends Migration
         Schema::create('community_tags', function (Blueprint $table) {
             $table->id();
             $table->string('tag_name');
-            $table->integer('community_id');
+            $table->bigInteger('community_id')->unsigned();
             $table->timestamps();
         });
     }

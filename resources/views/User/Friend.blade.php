@@ -13,8 +13,6 @@
                         <ul class="nav nav-pills">
                             <li class="nav-item"><a class="nav-link active" href="#activity"
                                     data-toggle="tab">Activity</a></li>
-                            <li class="nav-item"><a class="nav-link" href="#settings"
-                                    data-toggle="tab">Settings</a></li>
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -88,108 +86,6 @@
                                     <!-- /.card -->
                                 @endforeach
                             </div>
-
-                            <div class="tab-pane" id="settings">
-                                <form action="{{ route('Users.update') }}" method="POST" enctype="multipart/form-data">
-                                    <input type="hidden" name="id" value="{{ $user->id }}">
-                                    <div class="form-group row">
-                                        <label for="inputName" class="col-sm-6 col-form-label">Username</label>
-                                        <label for="inputEmail" class="col-sm-6 col-form-label">Email</label>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <label for="inputName" class="col-sm-6 col-form-label">First Name</label>
-                                        <label for="inputName" class="col-sm-6 col-form-label">Last Name</label>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <input type="text" name="first_name" class="form-control"
-                                                placeholder="First Name">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="text" name="last_name" class="form-control"
-                                                placeholder="Last Name">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <input type="text" name="username" class="form-control" placeholder="Userame">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email"
-                                                name="email">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Phone Number</label>
-                                        <label class="col-sm-6 col-form-label">Gender</label>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="Phone Number" name="phone_number"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <select class="form-control" id="exampleFormControlSelect1" name="geneder">
-                                                <option selected value="Not Known">Gender</option>
-                                                <option value="Male">Male</option>
-                                                <option value="Female">Female</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Birthday</label>
-                                        <label class="col-sm-6 col-form-label">Address</label>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <input type="datetime" name="birth_date" class="form-control">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="Address" name="address" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Password</label>
-                                        <label class="col-sm-6 col-form-label">Education</label>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <input type="password" placeholder="Password" name="password"
-                                                class="form-control">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="text" placeholder="Education" name="education"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Bio</label>
-                                        <div class="col-sm-10">
-                                            <textarea class="form-control" id="inputExperience" placeholder="Bio"
-                                                name="bio"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Profile Photo:</label>
-                                        <div class="col-sm-10">
-                                            <input type="file" class="form-control" name="profile_photo"
-                                                placeholder="Photo">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <button type="submit" class="btn btn-success">Update Info</button>
-                                        <a href="{{ route('Users.destroy') }}" class="btn btn-danger float-right">Delete
-                                            Account</a>
-                                    </div>
-                                </form>
-                            </div>
-                            <!-- /.tab-pane -->
                         </div>
                         <!-- /.tab-content -->
                     </div><!-- /.card-body -->

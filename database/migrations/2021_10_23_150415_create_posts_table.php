@@ -22,8 +22,8 @@ class CreatePostsTable extends Migration
             $table->string('post_url');
             $table->integer('post_privacy');
             $table->integer('rating')->default();
-            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('community_id')->references('id')->on('communities')->onDelete('cascade')->onUpdate('cascade');
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('community_id')->unsigned();
             $table->timestamps();
         });
     }

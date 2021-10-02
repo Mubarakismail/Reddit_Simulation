@@ -143,10 +143,8 @@
                             @endforeach
                         </ul>
                         <div class="card-footer text-center">
-                            <a href="
-                                                                                {{ route('Communities.index') }}"
-                                class="btn rounded-pill btn-outline-primary btn-lg" role="button" aria-pressed="true">View
-                                All</a>
+                            <a href="{{ route('Communities.index') }}" class="btn rounded-pill btn-outline-primary btn-lg"
+                                role="button" aria-pressed="true">View All</a>
                         </div>
                     </div>
                 </div>
@@ -154,7 +152,7 @@
                 <!-- Widget: Creation widget -->
                 <div class="card card-widget widget-user-2">
                     <div class="card-footer text-center">
-                        <a href="{{ route('Communities.create') }}" class="btn rounded-pill btn-primary btn-lg"
+                        <a data-toggle="modal" data-target="createCommunity" class="btn rounded-pill btn-primary btn-lg"
                             role="button" aria-pressed="true">Create Community</a>
                         <a href="{{ route('Posts.create') }}" class="btn rounded-pill btn-outline-primary btn-lg"
                             role="button" aria-pressed="true">Create Post</a>
