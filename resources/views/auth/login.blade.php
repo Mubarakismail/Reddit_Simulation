@@ -3,11 +3,11 @@
 @section('content')
     <div class="container">
         <div class="row justify-content-center">
-            <div class="col-md-8">
+            <div class="col-md-6">
                 <!-- /.login-logo -->
                 <div class="card card-outline card-primary">
                     <div class="card-header text-center">
-                        <a href="{{ route('Post.index') }}" class="h1"><b>Reddi</b>t</a>
+                        <a href="{{ route('Posts.index') }}" class="h1"><b>Reddi</b>t</a>
                     </div>
                     <div class="card-body">
                         <p class="login-box-msg">Sign in to start your session</p>
@@ -15,21 +15,21 @@
                         <form action="{{ route('login') }}" method="post">
                             @csrf
                             <div class="input-group mb-3">
-                                <input type="email" class="form-control" placeholder="Email" required autocomplete="email"
+                                <input type="text" class="form-control" placeholder="Username" name="username" required autocomplete="username"
                                     autofocus>
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-envelope"></span>
                                     </div>
                                 </div>
-                                @error('email')
+                                @error('username')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
                             </div>
                             <div class="input-group mb-3">
-                                <input type="password" class="form-control" placeholder="Password">
+                                <input type="password" class="form-control" placeholder="Password" name="password">
                                 <div class="input-group-append">
                                     <div class="input-group-text">
                                         <span class="fas fa-lock"></span>
@@ -69,7 +69,7 @@
                         <!-- /.social-auth-links -->
 
                         <p class="mb-1">
-                            <a href="{{ route('password.reset') }}">I forgot my password</a>
+                            <a href="{{ route('password.request') }}">I forgot my password</a>
                         </p>
                         <p class="mb-0">
                             <a href="{{ route('register') }}" class="text-center">Register a new membership</a>

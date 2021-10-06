@@ -15,10 +15,8 @@ class CreateFriendsTable extends Migration
     {
         Schema::create('friends', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users')
-                ->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('friend_id')->references('id')->on('users')
-                ->onDelete('cascade')->onUpdate('cascade');
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('friend_id')->unsigned();
             $table->timestamps();
         });
     }

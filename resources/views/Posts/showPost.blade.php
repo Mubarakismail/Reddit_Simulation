@@ -16,7 +16,8 @@
                 <div class="card card-widget">
                     <div class="card-header">
                         <div class="user-block">
-                            <img class="img-circle" src="{{ asset('img/user1-128x128.jpg') }}" alt="User Image">
+                            <img class="img-circle" src="{{ asset('images/upload/' . $post->user->profile_photo) }}"
+                                alt="User Image">
                             <span class="username"><a href="#">{{ $post->user->username }}</a></span>
                             <span class="description">Shared publicly - {{ $post->created_at }}</span>
                         </div>
@@ -44,29 +45,31 @@
                         <!-- Attachment -->
 
                         @if (isset($post->post_image))
-                            <img class="img-fluid pad" src="{{ asset('images/upload/$post->post_image') }}" alt="Photo">
+                            <img class="img-fluid pad" src="{{ asset('images/upload/' . $post->post_image) }}"
+                                alt="Photo">
                         @elseif (isset($post->post_video))
                             <video controls class="video-fluid">
-                                <source src="{{ asset('videos/upload/$post->post_video') }}" type="video">
+                                <source src="{{ asset('images/upload/' . $post->post_video) }}" type="video">
                             </video>
                         @endif
                         <!-- /.attachment-block -->
 
                         <!-- Social sharing buttons -->
-
-                        <button type="button" class="btn btn-default btn-sm">
+                        <a href="{{ route('Posts.upVote', ['Post' => $post->id]) }}" class="btn btn-sm btn-default">
                             <i class="fas fa-arrow-alt-circle-up"></i>
-                        </button>
-                        <span>Vote</span>
-                        <button type="button" class="btn btn-default btn-sm">
+                        </a>
+                        <span>
+                            @if ($post->rating > 0)
+                                {{ $post->rating }}
+                            @endif
+                            Vote
+                        </span>
+                        <a href="{{ route('Posts.downVote', ['Post' => $post->id]) }}" class="btn btn-sm btn-default">
                             <i class="fas fa-arrow-alt-circle-down"></i>
-                        </button>
-                        <button type="button" class="btn btn-default">
+                        </a>
+                        <a href="{{ route('Posts.show', ['Post' => $post->id]) }}" class="btn btn-default">
                             <i class="fas fa-comment-dots"></i> {{ $post->comments->count() }} Comments
-                        </button>
-
-                        <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i>
-                            Share</button>
+                        </a>
                     </div>
 
                     <!-- /.card-body -->
@@ -75,7 +78,7 @@
                             <div class="card-comment">
                                 <!-- User image -->
                                 <img class="img-circle img-sm"
-                                    src="{{ asset('images/upload/$comment->user->profile_photo') }}" alt="User Image">
+                                    src="{{ asset('images/upload/' . $comment->user->profile_photo) }}" alt="User Image">
 
                                 <div class="comment-text">
                                     <span class="username">
@@ -90,15 +93,15 @@
                     </div>
                     <!-- /.card-footer -->
                     <div class="card-footer">
-                        <form action="#" method="post">
-                            <img class="img-fluid img-circle img-sm" src="{{ asset('images/upload/$profile_photo') }}"
-                                alt="Alt Text">
-                            <form action="{{ route('Comments.store') }}">
-                                <div class="img-push">
-                                    <input type="text" class="form-control form-control-sm"
-                                        placeholder="Press enter to post comment" name="comment_body">
-                                </div>
-                            </form>
+                        <form action="{{ route('Comments.store') }}" method="POST">
+                            @csrf
+                            <img class="img-fluid img-circle img-sm"
+                                src="{{ asset('images/upload/' . $post->user->profile_photo) }}" alt="Alt Text">
+                            <div class="img-push">
+                                <input type="text" class="form-control form-control-sm"
+                                    placeholder="Press enter to post comment" name="comment_body">
+                                <input type="hidden" class="form-control" value="{{ $post->id }}" name="post_id">
+                            </div>
                         </form>
                     </div>
                     <!-- /.card-footer -->
@@ -118,8 +121,9 @@
                         <ul class="nav flex-column">
                             @foreach ($Communities as $Community)
                                 <li class="nav-item">
-                                    {{ $loop->index }}
-                                    <a href="#" class="nav-link">
+                                    <a href="{{ route('Communities', ['Community' => $Community->id]) }}"
+                                        class="nav-link">
+                                        {{ $loop->index }}
                                         <span><i class="far fa-arrow-alt-circle-up"></i></span>
                                         {{ $Community->Community_name }}
                                     </a>
@@ -137,8 +141,8 @@
                 <!-- Widget: Creation widget -->
                 <div class="card card-widget widget-user-2">
                     <div class="card-footer text-center">
-                        <a href="{{ route('Communities.create') }}" class="btn rounded-pill btn-primary btn-lg"
-                            role="button" aria-pressed="true">Create Community</a>
+                        <a data-toggle="modal" data-target="#createCommunity" class="btn rounded-pill btn-primary btn-lg"
+                            role="button" aria-pressed="true" style="margin-bottom: 10px">Create Community</a>
                         <a href="{{ route('Posts.create') }}" class="btn rounded-pill btn-outline-primary btn-lg"
                             role="button" aria-pressed="true">Create Post</a>
                     </div>

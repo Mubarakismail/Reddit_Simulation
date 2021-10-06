@@ -56,19 +56,22 @@
 
                             <!-- Social sharing buttons -->
 
-                            <button type="button" class="btn btn-default btn-sm">
-                                <i class="fas fa-arrow-alt-circle-up"></i>
-                            </button>
-                            <span>Vote</span>
-                            <button type="button" class="btn btn-default btn-sm">
-                                <i class="fas fa-arrow-alt-circle-down"></i>
-                            </button>
-                            <button type="button" class="btn btn-default">
-                                <i class="fas fa-comment-dots"></i> {{ $post->comments->count() }} Comments
-                            </button>
 
-                            <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i>
-                                Share</button>
+                            <a href="{{ route('Posts.upVote', ['Post' => $post->id]) }}" class="btn btn-sm btn-default">
+                                <i class="fas fa-arrow-alt-circle-up"></i>
+                            </a>
+                            <span>
+                                @if ($post->rating > 0)
+                                    {{ $post->rating }}
+                                @endif
+                                Vote
+                            </span>
+                            <a href="{{ route('Posts.downVote', ['Post' => $post->id]) }}" class="btn btn-sm btn-default">
+                                <i class="fas fa-arrow-alt-circle-down"></i>
+                            </a>
+                            <a href="{{ route('Posts.show', ['Post' => $post->id]) }}" class="btn btn-default">
+                                <i class="fas fa-comment-dots"></i> {{ $post->comments->count() }} Comments
+                            </a>
                         </div>
 
                         {{-- <!-- /.card-body -->
@@ -134,17 +137,17 @@
                         <ul class="nav flex-column">
                             @foreach ($Communities as $Community)
                                 <li class="nav-item">
-                                    {{ $loop->index }}
-                                    <a href="#" class="nav-link">
-                                        <span><i class="far fa-arrow-alt-circle-up"></i></span>
-                                        {{ $Community->Community_name }}
+                                    <a href="{{ route('Communities.show', ['Community' => $Community->id]) }}"
+                                        class="nav-link">
+                                        {{ $loop->index + 1 }}
+                                        <span> <i class="far fa-arrow-alt-circle-up"></i></span>
+                                        {{ $Community->community_name }}
                                     </a>
                                 </li>
                             @endforeach
                         </ul>
                         <div class="card-footer text-center">
-                            <a href="
-                                                                                {{ route('Communities.index') }}"
+                            <a href="{{ route('Communities.index') }}"
                                 class="btn rounded-pill btn-outline-primary btn-lg" role="button" aria-pressed="true">View
                                 All</a>
                         </div>
@@ -154,8 +157,8 @@
                 <!-- Widget: Creation widget -->
                 <div class="card card-widget widget-user-2">
                     <div class="card-footer text-center">
-                        <a href="{{ route('Communities.create') }}" class="btn rounded-pill btn-primary btn-lg"
-                            role="button" aria-pressed="true">Create Community</a>
+                        <a data-toggle="modal" data-target="createCommunity" class="btn rounded-pill btn-primary btn-lg"
+                            role="button" aria-pressed="true" style="margin-bottom: 10px">Create Community</a>
                         <a href="{{ route('Posts.create') }}" class="btn rounded-pill btn-outline-primary btn-lg"
                             role="button" aria-pressed="true">Create Post</a>
                     </div>
@@ -167,17 +170,20 @@
                     <div class="card-header">
                         Recent Posts
                     </div>
-                    <div class="card-footer p-0">
-                        <ul class="nav flex-column">
+                    <div class="card-body p-0">
+                        <ul class="nav flex-column nav-pills">
                             @foreach ($NewestPosts as $post)
                                 <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <div class="info-box">
-                                            <span class="info-box-icon bg-danger"><i class="fas fa-link"></i></span>
+                                    <a href="{{ route('Posts.show', ['Post' => $post->id]) }}" class="nav-link mw-100">
+                                        <div class="row">
+                                            <div class="info-box">
+                                                <span class="info-box-icon bg-danger"><i class="fas fa-link"></i></span>
 
-                                            <div class="info-box-content">
-                                                <span class="info-box-text">{{ $post->post_title }}</span>
-                                                <span class="info-box-number">{{ $post->comments->count() }}</span>
+                                                <div class="info-box-content">
+                                                    <span
+                                                        class="info-box-text mx-100 h-auto">{{ $post->post_title }}</span>
+                                                    <span class="info-box-number">{{ $post->comments->count() }}</span>
+                                                </div>
                                             </div>
                                         </div>
                                     </a>

@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\post\postStore;
 use App\Http\Requests\post\postUpdate;
+use App\Models\Post;
 use App\Repository\PostRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -50,6 +52,30 @@ class PostController extends Controller
     {
         if (Auth::check()) {
             return $this->post->destroy($request);
+        } else {
+            return redirect('login');
+        }
+    }
+    public function upVote($Post)
+    {
+        if (Auth::check()) {
+            $post = Post::findOrFail($Post);
+            $post->rating++;
+            $post->save();
+            return redirect()->back();
+        } else {
+            return redirect('login');
+        }
+    }
+    public function downVote($Post)
+    {
+        if (Auth::check()) {
+            $post = Post::findOrFail($Post);
+            $post->rating--;
+            if ($post->rating < 1)
+                $post->rating = 0;
+            $post->save();
+            return redirect()->back();
         } else {
             return redirect('login');
         }

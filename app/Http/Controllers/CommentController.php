@@ -15,38 +15,21 @@ class CommentController extends Controller
     {
         $this->comment = $comment;
     }
-    public function index()
-    {
-        return $this->comment->index();
-    }
-
-    public function create()
-    {
-        if (Auth::check()) {
-            return $this->comment->create();
-        } else {
-            return redirect('login');
-        }
-    }
     public function store(commentStore $request)
     {
-        return $this->comment->store($request);
-    }
-    public function show($id)
-    {
-        return $this->comment->show($id);
-    }
-    public function edit($id)
-    {
         if (Auth::check()) {
-            return $this->comment->edit($id);
+            return $this->comment->store($request);
         } else {
             return redirect('login');
         }
     }
     public function update(commentUpdate $request)
     {
-        return $this->comment->update($request);
+        if (Auth::check()) {
+            return $this->comment->update($request);
+        } else {
+            return redirect('login');
+        }
     }
     public function destroy(Request $request)
     {

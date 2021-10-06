@@ -21,18 +21,18 @@ class RepoServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind([
+        $this->app->bind(
             PostRepositoryInterface::class,
             PostRepository::class,
-        ]);
-        $this->app->bind([
+        );
+        $this->app->bind(
             CommunityRepositoryInterface::class,
             CommunityRepository::class,
-        ]);
-        $this->app->bind([
+        );
+        $this->app->bind(
             CommentRepositoryInterface::class,
             CommentRepository::class,
-        ]);
+        );
     }
 
     /**

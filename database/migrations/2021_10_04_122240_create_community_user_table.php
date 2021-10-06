@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateCommunityTagsTable extends Migration
+class CreateCommunityUserTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateCommunityTagsTable extends Migration
      */
     public function up()
     {
-        Schema::create('community_tags', function (Blueprint $table) {
+        Schema::create('community_user', function (Blueprint $table) {
             $table->id();
-            $table->string('tag_name');
-            $table->bigInteger('community_id')->unsigned();
+            $table->bigInteger('user_id')->unsigned();
+            $table->bigInteger('Community_id')->unsigned();
+            $table->string('user_type');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateCommunityTagsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('community_tags');
+        Schema::dropIfExists('community_peoples');
     }
 }

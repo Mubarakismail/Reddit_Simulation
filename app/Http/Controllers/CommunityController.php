@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\community\communityStore;
 use App\Http\Requests\community\communityUpdate;
+use App\Models\Community;
+use App\Models\Post;
 use App\Repository\CommunityRepositoryInterface;
 use Illuminate\Http\Request;
 
@@ -18,14 +20,6 @@ class CommunityController extends Controller
     {
         return $this->community->index();
     }
-    public function create()
-    {
-        if (Auth::check()) {
-            return $this->community->create();
-        } else {
-            return redirect('login');
-        }
-    }
     public function store(communityStore $request)
     {
         return $this->community->store($request);
@@ -33,14 +27,6 @@ class CommunityController extends Controller
     public function show($id)
     {
         return $this->community->show($id);
-    }
-    public function edit($id)
-    {
-        if (Auth::check()) {
-            return $this->community->edit($id);
-        } else {
-            return redirect('login');
-        }
     }
     public function update(communityUpdate $request)
     {
@@ -53,5 +39,17 @@ class CommunityController extends Controller
         } else {
             return redirect('login');
         }
+    }
+    public function join($community)
+    {
+        $Community = Community::findOrFail($community);
+        $Community->numberOfMembers++;
+        DB::table('community_user')->insert([
+            'user_id' => Auth::user()->id,
+            'Community_id' => $Community->id,
+            'user_type' => 'member',
+        ]);
+        $Community->save();
+        return redirect()->route('Communities.show', ['Community' => $community->id]);
     }
 }

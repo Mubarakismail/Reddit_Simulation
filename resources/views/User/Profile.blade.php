@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-8">
                 <div class="card">
@@ -15,6 +15,8 @@
                                     data-toggle="tab">Activity</a></li>
                             <li class="nav-item"><a class="nav-link" href="#settings"
                                     data-toggle="tab">Settings</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#privacy"
+                                    data-toggle="tab">Privacy</a></li>
                         </ul>
                     </div><!-- /.card-header -->
                     <div class="card-body">
@@ -57,10 +59,10 @@
 
                                             @if (isset($post->post_image))
                                                 <img class="img-fluid pad"
-                                                    src="{{ asset('images/upload/$post->post_image') }}" alt="Photo">
+                                                    src="{{ asset('images/upload/' . $post->post_image) }}" alt="Photo">
                                             @elseif (isset($post->post_video))
                                                 <video controls class="video-fluid">
-                                                    <source src="{{ asset('videos/upload/$post->post_video') }}"
+                                                    <source src="{{ asset('images/upload/' . $post->post_video) }}"
                                                         type="video">
                                                 </video>
                                             @endif
@@ -68,21 +70,25 @@
 
                                             <!-- Social sharing buttons -->
 
-                                            <button type="button" class="btn btn-default btn-sm">
+                                            <a href="{{ route('Posts.upVote', ['Post' => $post->id]) }}"
+                                                class="btn btn-sm btn-default">
                                                 <i class="fas fa-arrow-alt-circle-up"></i>
-                                            </button>
-                                            <span>Vote</span>
-                                            <button type="button" class="btn btn-default btn-sm">
+                                            </a>
+                                            <span>
+                                                @if ($post->rating > 0)
+                                                    {{ $post->rating }}
+                                                @endif
+                                                Vote
+                                            </span>
+                                            <a href="{{ route('Posts.downVote', ['Post' => $post->id]) }}"
+                                                class="btn btn-sm btn-default">
                                                 <i class="fas fa-arrow-alt-circle-down"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-default">
+                                            </a>
+                                            <a href="{{ route('Posts.show', ['Post' => $post->id]) }}"
+                                                class="btn btn-default">
                                                 <i class="fas fa-comment-dots"></i> {{ $post->comments->count() }}
                                                 Comments
-                                            </button>
-
-                                            <button type="button" class="btn btn-default btn-sm"><i
-                                                    class="fas fa-share"></i>
-                                                Share</button>
+                                            </a>
                                         </div>
                                     </div>
                                     <!-- /.card -->
@@ -90,11 +96,25 @@
                             </div>
 
                             <div class="tab-pane" id="settings">
-                                <form action="{{ route('Users.update') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ route('Users.update', ['User' => Auth::user()->id]) }}" method="post"
+                                    enctype="multipart/form-data">
+                                    {{ csrf_field() }}
+                                    {{ method_field('PUT') }}
                                     <input type="hidden" name="id" value="{{ $user->id }}">
                                     <div class="form-group row">
                                         <label for="inputName" class="col-sm-6 col-form-label">Username</label>
                                         <label for="inputEmail" class="col-sm-6 col-form-label">Email</label>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-sm-6">
+                                            <input type="text" name="username" class="form-control" placeholder="Userame"
+                                                value="{{ isset($user) ? $user->username : '' }}">
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email"
+                                                name="email" value="{{ isset($user) ? $user->email : '' }}">
+                                        </div>
                                     </div>
 
                                     <div class="form-group row">
@@ -105,35 +125,28 @@
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <input type="text" name="first_name" class="form-control"
-                                                placeholder="First Name">
+                                                placeholder="First Name"
+                                                value="{{ isset($user) ? $user->first_name : '' }}">
                                         </div>
                                         <div class="col-sm-6">
                                             <input type="text" name="last_name" class="form-control"
-                                                placeholder="Last Name">
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group row">
-                                        <div class="col-sm-6">
-                                            <input type="text" name="username" class="form-control" placeholder="Userame">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <input type="email" class="form-control" id="inputEmail" placeholder="Email"
-                                                name="email">
+                                                placeholder="Last Name"
+                                                value="{{ isset($user) ? $user->last_name : '' }}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Phone Number</label>
-                                        <label class="col-sm-6 col-form-label">Gender</label>
+                                        <label class="col-sm-2 col-md-6 col-form-label">Phone Number</label>
+                                        <label class="col-sm-6 col-md-6 col-form-label">Gender</label>
                                     </div>
 
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="Phone Number" name="phone_number"
-                                                class="form-control">
+                                                class="form-control"
+                                                value="{{ isset($user) ? $user->phone_number : '' }}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <select class="form-control" id="exampleFormControlSelect1" name="geneder">
+                                            <select class="form-control" id="exampleFormControlSelect1" name="gender">
                                                 <option selected value="Not Known">Gender</option>
                                                 <option value="Male">Male</option>
                                                 <option value="Female">Female</option>
@@ -141,38 +154,41 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Birthday</label>
-                                        <label class="col-sm-6 col-form-label">Address</label>
+                                        <label class="col-sm-2 col-md-6 col-form-label">Birthday</label>
+                                        <label class="col-sm-6 col-md-6 col-form-label">Address</label>
                                     </div>
 
                                     <div class="form-group row">
                                         <div class="col-sm-6">
-                                            <input type="datetime" name="birth_date" class="form-control">
+                                            <input type="datetime-local" name="birth_date" class="form-control"
+                                                value="{{ isset($user) ? $user->birth_date : '' }}">
                                         </div>
                                         <div class="col-sm-6">
-                                            <input type="text" placeholder="Address" name="address" class="form-control">
+                                            <input type="text" placeholder="Address" name="address" class="form-control"
+                                                value="{{ isset($user) ? $user->address : '' }}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label class="col-sm-2 col-form-label">Password</label>
-                                        <label class="col-sm-6 col-form-label">Education</label>
+                                        <label class="col-sm-2 col-md-6 col-form-label">Password</label>
+                                        <label class="col-sm-6 col-md-6 col-form-label">Education</label>
                                     </div>
 
                                     <div class="form-group row">
                                         <div class="col-sm-6">
                                             <input type="password" placeholder="Password" name="password"
-                                                class="form-control">
+                                                class="form-control" value="{{ isset($user) ? $user->password : '' }}">
                                         </div>
                                         <div class="col-sm-6">
                                             <input type="text" placeholder="Education" name="education"
-                                                class="form-control">
+                                                class="form-control"
+                                                value="{{ isset($user) ? $user->education : '' }}">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label class="col-sm-2 col-form-label">Bio</label>
                                         <div class="col-sm-10">
                                             <textarea class="form-control" id="inputExperience" placeholder="Bio"
-                                                name="bio"></textarea>
+                                                name="bio">{{ isset($user) ? $user->bio : '' }} </textarea>
                                         </div>
                                     </div>
                                     <div class="form-group row">
@@ -183,13 +199,22 @@
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <button type="submit" class="btn btn-success">Update Info</button>
-                                        <a href="{{ route('Users.destroy') }}" class="btn btn-danger float-right">Delete
-                                            Account</a>
+                                        <button type="submit" class="btn btn-success" style="margin-right: 20px">Update
+                                            Info</button>
                                     </div>
                                 </form>
                             </div>
-                            <!-- /.tab-pane -->
+
+                            <div class="tab-pane" id="privacy">
+                                <form action="{{ route('Users.destroy', ['User' => Auth::user()->id]) }}" method="post">
+                                    {{ csrf_field() }}
+                                    {{ method_field('delete') }}
+                                    <input type="hidden" name="id" value="{{ $user->id }}">
+                                    <button type="submit" rel="tooltip" title="" class="btn btn-danger">
+                                        Delete Account
+                                    </button>
+                                </form>
+                            </div>
                         </div>
                         <!-- /.tab-content -->
                     </div><!-- /.card-body -->
@@ -204,22 +229,20 @@
                     <div class="card-body box-profile">
                         <div class="text-center">
                             <img class="profile-user-img img-fluid img-circle"
-                                src="lv:{{ asset('
-                            images/uploads/$user->profile_photo') }}"
-                                alt="User profile picture">
+                                src="{{ asset('images/upload/' . $user->profile_photo) }}" alt="User profile picture">
                         </div>
 
                         <h3 class="profile-username text-center">{{ $user->username }}</h3>
 
                         <ul class="list-group list-group-unbordered mb-3">
                             <li class="list-group-item">
-                                <b>Friends</b> <a class="float-right">{{ $user > friends->count() }}</a>
+                                <b>Friends</b> <a class="float-right">{{ $user->friends->count() }}</a>
                             </li>
                             <li class="list-group-item">
-                                <b>Posts</b> <a class="float-right">{{ $user > posts->count() }}</a>
+                                <b>Posts</b> <a class="float-right">{{ $user->posts->count() }}</a>
                             </li>
                             <li class="list-group-item">
-                                <b>Communities</b> <a class="float-right">{{ $user > communities->count() }}</a>
+                                <b>Communities</b> <a class="float-right">{{ $user->communities->count() }}</a>
                             </li>
                         </ul>
                     </div>
