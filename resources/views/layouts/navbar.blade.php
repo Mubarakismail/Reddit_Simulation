@@ -24,46 +24,43 @@
         <!-- Right navbar links -->
         <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
             @if (!Auth::check())
-                <a href=" {{ route('login') }}" class="btn btn-rounded-pill btn-outline-primary">log In</a>
-                <a href=" {{ route('register') }}" class="btn btn-rounded-pill btn-primary">Sign Up</a>
+                <li class="nav-item">
+                    <a href=" {{ route('login') }}" class="btn btn-rounded-pill btn-outline-primary">log In</a>
+                </li>
+                <li class="nav-item">
+                    <a href=" {{ route('register') }}" class="btn btn-rounded-pill btn-primary">Sign Up</a>
+                </li>
             @else
                 <!-- Messages Dropdown Menu -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link" data-toggle="dropdown" href="#">
-                        <a href="{{ route('Users.edit', ['id' => Auth::user()->id]) }}" class="btn btn-success">
-                            <span><i class="fa fa-user"></i></span>{{ Auth::user()->username }}</a>
+                    <a id="navbarDropdown" class="nav-link dropdown-toggle btn-info" style="color: white" href="#"
+                        role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                        <span><i class="fa fa-user"></i></span>
+                        {{ Auth::user()->username }} <span class="caret"></span>
                     </a>
-                    <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                        <a href="{{ route('User.edit', ['id' => Auth::user()->id]) }}" class="dropdown-item">
-                            <div class="media">
-                                <span><i class="fa fa-user"></i></span>
-                                <h3>Profile</h3>
-                            </div>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a href="{{ route('Users.edit', ['User' => Auth::user()->id]) }}" class="dropdown-item">
+                            <h5><span><i class="fa fa-user"></i></span> Profile</h5>
                         </a>
                         <div class="dropdown-divider"></div>
 
                         <a href="{{ route('Posts.create') }}" class="dropdown-item">
-                            <div class="media">
-                                <span><i class="fa fa-comments"></i></span>
-                                <h3>Create Post</h3>
-                            </div>
+                            <h5><span><i class="fa fa-comments"></i></span> Create Post</h5>
                         </a>
                         <div class="dropdown-divider"></div>
 
-                        <a data-toggle="modal" data-target="#createCommunity" class="dropdown-item">
-                            <div class="media">
-                                <span><i class="fa fa-people"></i></span>
-                                <h3>Create Community</h3>
-                            </div>
+                        <a data-toggle="modal" data-target="#createCommunity" class="dropdown-item btn">
+                            <h5> <span><i class="fas fa-users"></i></span> Create Community</h5>
                         </a>
                         <div class="dropdown-divider"></div>
-
-                        <a href="{{ route('logout') }}" class="dropdown-item">
-                            <div class="media">
-                                <span><i class="fa fa-back"></i></span>
-                                <h3>logout</h3>
-                            </div>
+                        <a class="btn dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
                         </a>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
                     </div>
                 </li>
             @endif

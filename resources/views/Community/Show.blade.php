@@ -4,19 +4,22 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-widget widget-user">
                     <!-- Add the bg color to the header using any of the bg-* classes -->
-                    <div class="widget-user-header bg-overlay" style="background: url('img/5235.jpg') center center;">
+                    <div class="widget-user-header bg-overlay"
+                        style="background: url({{ asset('img/5235.jpg') }}) no-repeat center;">
                         <div class="widget-user-image">
                             <img class="img-circle elevation-2" src="{{ asset('img/teamwork.png') }}" alt="User Avatar">
                         </div>
                         <!-- /.widget-user-image -->
                         <h2 class="widget-user-username">{{ $Community->commmunity_name }}</h2>
-                        <a href="{{ route('Communities.join', ['id' => Auth::user()->id]) }}"
-                            class="btn btn-primary btn-rounded-pill btn-lg"></a>
+                        @if (Auth::check())
+                            <a href="{{ route('Communities.join', ['community' => $Community->id]) }}"
+                                class="btn btn-primary rounded-pill btn-lg">Join Community</a>
+                        @endif
                     </div>
                 </div>
                 <!-- /.widget-user -->
@@ -96,13 +99,31 @@
                         <h3 class="widget-user-username">About Community</h3>
                     </div>
                     <div class="card-body p-0">
-                        <p>{{ $Community->description }}</p>
+                        <div class="description-block">
+                            <p class="description-text" style="margin: 5%">{{ $Community->description }}</p>
+                        </div>
                         <div class="row">
-                            <div class="col-md-6">{{ $Community->numberOfMembers }}</div>
-                            <div class="col-md-6">{{ $Community->community_privacy }}</div>
+                            <div class="col-sm-6 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">{{ $Community->numberOfMembers }}</h5>
+                                    <span class="description-text">Memebers</span>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-sm-6 border-right">
+                                <div class="description-block">
+                                    <h5 class="description-header">{{ $Community->community_privacy }}</h5>
+                                    <span class="description-text">Privacy</span>
+                                </div>
+                                <!-- /.description-block -->
+                            </div>
                         </div>
                         <br>
-                        <p><span><i class="fas fa-stopwatch"></i></span> Created At {{ $Communtiy->created_at }}</p>
+                        <div class="description-block">
+                            <p class="description-header"><span><i class="fas fa-stopwatch"></i></span> Created At
+                                {{ $Community->created_at }}</p>
+                        </div>
                         <div class="card-footer text-center">
                             <a href="{{ route('Posts.create') }}" class="btn rounded-pill btn-outline-primary btn-lg"
                                 role="button" aria-pressed="true">Create Post</a>
@@ -113,8 +134,9 @@
                 <!-- Widget: Creation widget -->
                 <div class="card card-widget widget-user-2">
                     <div class="card-footer text-center">
-                        <a href="{{ route('Communities.create') }}" class="btn rounded-pill btn-primary btn-lg"
-                            role="button" aria-pressed="true">Create Community</a>
+                        <button data-toggle="modal" data-target="#createCommunity"
+                            class="btn rounded-pill btn-primary btn-lg" role="button" aria-pressed="true"
+                            style="margin-bottom: 10px">Create Community</button>
                         <a href="{{ route('Posts.create') }}" class="btn rounded-pill btn-outline-primary btn-lg"
                             role="button" aria-pressed="true">Create Post</a>
                     </div>

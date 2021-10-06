@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Models\Community;
+use App\Models\Post;
+use Illuminate\Support\Facades\DB;
 
 class CommunityRepository implements CommunityRepositoryInterface
 {
@@ -14,7 +16,9 @@ class CommunityRepository implements CommunityRepositoryInterface
     public function show($id)
     {
         $Community = Community::findOrFail($id);
-        return view('Community.Show', compact('Community'));
+        $posts = Post::where('community_id', '=', $Community->id)->get();
+        $tags = DB::table('community_tags')->where('community_id', $Community->id)->get();
+        return view('Community.Show', compact('Community', 'posts', 'tags'));
     }
     public function store($request)
     {

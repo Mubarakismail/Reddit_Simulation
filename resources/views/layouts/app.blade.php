@@ -43,6 +43,15 @@
 
             <!-- Main content -->
             <div class="content">
+                @if ($errors->any())
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
                 @yield('content')
             </div>
             <!-- /.content -->
@@ -59,8 +68,13 @@
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('js/adminlte.min.js') }}"></script>
-    <!-- AdminLTE for demo purposes -->
-    <script src="{{ asset('js/demo.js') }}"></script>
+    <script>
+        $(function() {
+            $('.dropdown-toggle').dropdown();
+        });
+    </script>
+    {{-- <!-- AdminLTE for demo purposes -->
+    <script src="{{ asset('js/demo.js') }}"></script> --}}
     @yield('script')
 </body>
 

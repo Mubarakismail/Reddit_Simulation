@@ -15,7 +15,7 @@
                         <form action="{{ route('login') }}" method="post">
                             @csrf
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" placeholder="Username" required autocomplete="username"
+                                <input type="text" class="form-control" placeholder="Username" name="username" required autocomplete="username"
                                     autofocus>
                                 <div class="input-group-append">
                                     <div class="input-group-text">

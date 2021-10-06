@@ -35,6 +35,12 @@ class CreateForeignKeys extends Migration
             $table->foreign('post_id')->references('id')->on('posts')
                 ->onDelete('cascade')->onUpdate('cascade');
         });
+        Schema::table('community_user', function (Blueprint $table) {
+            $table->foreign('user_id')->references('id')->on('users')
+                ->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('Community_id')->references('id')->on('communities')
+                ->onDelete('cascade')->onUpdate('cascade');
+        });
     }
 
     /**

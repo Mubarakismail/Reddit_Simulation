@@ -15,7 +15,7 @@ class CommentRepository implements CommentRepositoryInterface
             $comment->user_id = Auth::user()->id;
             $comment->post_id = $request->post_id;
             $comment->save();
-            return redirect()->route('Posts.show', ['id', $request->post_id]);
+            return redirect()->route('Posts.show', ['Post' => $request->post_id]);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
