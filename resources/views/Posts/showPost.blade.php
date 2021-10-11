@@ -18,8 +18,9 @@
                         <div class="user-block">
                             <img class="img-circle" src="{{ asset('images/upload/' . $post->user->profile_photo) }}"
                                 alt="User Image">
-                            <span class="username"><a href="#">{{ $post->user->username }}</a></span>
-                            <span class="description">Shared publicly - {{ $post->created_at }}</span>
+                            <span class="username"><a
+                                    href="{{ route('Users.show', ['User' => $post->user->id]) }}">{{ $post->user->username }}</a></span>
+                            <span class="description">Shared publicly - {{ $post->created_at->diffForHumans() }}</span>
                         </div>
                         <!-- /.user-block -->
                         <div class="card-tools">
@@ -44,8 +45,8 @@
 
                         <!-- Attachment -->
 
-                        @if (isset($post->post_image))
-                            <img class="img-fluid pad" src="{{ asset('images/upload/' . $post->post_image) }}"
+                        @if (isset($post->post_photo))
+                            <img class="img-fluid pad" src="{{ asset('images/upload/' . $post->post_photo) }}"
                                 alt="Photo">
                         @elseif (isset($post->post_video))
                             <video controls class="video-fluid">
@@ -59,8 +60,8 @@
                             <i class="fas fa-arrow-alt-circle-up"></i>
                         </a>
                         <span>
-                            @if ($post->rating > 0)
-                                {{ $post->rating }}
+                            @if ($post->votes->count() > 0)
+                                {{ $post->votes->count() }}
                             @endif
                             Vote
                         </span>
@@ -83,7 +84,8 @@
                                 <div class="comment-text">
                                     <span class="username">
                                         {{ $comment->user->username }}
-                                        <span class="text-muted float-right">{{ $comment->created_at }}</span>
+                                        <span
+                                            class="text-muted float-right">{{ $comment->created_at->diffForHumans() }}</span>
                                     </span><!-- /.username -->
                                     {{ $comment->comment_body }}
                                 </div>

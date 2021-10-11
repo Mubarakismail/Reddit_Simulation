@@ -28,16 +28,16 @@
                     </div>
                     <br>
                     <div class="form-group">
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" name="community_privacy" checked=""
+                        <div class="form-check">
+                            <input class="form-control-input" type="radio" name="community_privacy" checked=""
                                 value="Public">
-                            <label class="custom-control-label">Public <span
+                            <label class="form-control-label">Public <span
                                     style="color:#7c7c7c;font-size: 12px;font-weight: 400;line-height: 16px;">
                                     Anyone can view, post, and comment to this community</span></label>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" name="community_privacy" value="Private">
-                            <label class="custom-control-label">Private <span
+                        <div class="form-check">
+                            <input class="form-control-input" type="radio" name="community_privacy" value="Private">
+                            <label class="form-control-label">Private <span
                                     style="color:#7c7c7c;font-size: 12px;font-weight: 400;line-height: 16px;">
                                     Only approved users can view and submit to this community</span></label>
                         </div>

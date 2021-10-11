@@ -19,7 +19,6 @@ class PostsSeeder extends Seeder
                 'post_title'=>$faker->realText(50,2),
                 'post_body'=>$faker->paragraph,
                 'post_privacy'=>rand(1,3),
-                'rating'=>rand(10,2000),
                 'user_id'=>rand(1,40),
                 'community_id'=>rand(1,40),
             ]);

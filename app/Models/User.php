@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-use Hootlex\Friendships\Traits\Friendable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use Friendable;
     use Notifiable;
 
     /**
@@ -50,5 +48,9 @@ class User extends Authenticatable
     public function Communities()
     {
         return $this->belongsToMany(Community::class);
+    }
+    public function friends()
+    {
+        return $this->belongsToMany(User::class, 'friends', 'user_id', 'friend_id');
     }
 }

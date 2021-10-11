@@ -5,7 +5,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid">
+    <div class="container">
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -18,15 +18,18 @@
                             <tbody>
                                 @foreach ($Communities as $community)
                                     <tr>
-                                        <td>{{ $loop->index() + 1 }}.</td>
-                                        <td><a
-                                                href="{{ route('Communities.show', ['id' => $community->id]) }}">{{ $community->community_name }}</a>
+                                        <td>
+                                            <h3 style="color: black">{{ $loop->index + 1 }}.</h3>
+                                        </td>
+                                        <td><a href="{{ route('Communities.show', ['Community' => $community->id]) }}">
+                                                <h3 style="color: black">{{ $community->community_name }}</h3>
+                                            </a>
                                         </td>
                                         <td>
                                             <div class="float-right">
-                                                <a href="btn btn-info btn-lg"
-                                                    href="{{ route('Communities.join') }}"><span><i
-                                                            class="fa fa-plus"></i></span>Join Community</a>
+                                                <a class="btn btn-info btn-lg"
+                                                    href="{{ route('Communities.join', ['community' => $community->id]) }}"><span><i
+                                                            class="fa fa-plus"></i></span> Join Community</a>
                                             </div>
                                         </td>
                                     </tr>

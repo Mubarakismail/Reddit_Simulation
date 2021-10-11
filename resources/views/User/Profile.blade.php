@@ -15,6 +15,8 @@
                                     data-toggle="tab">Activity</a></li>
                             <li class="nav-item"><a class="nav-link" href="#settings"
                                     data-toggle="tab">Settings</a></li>
+                            <li class="nav-item"><a class="nav-link" href="#timeline"
+                                    data-toggle="tab">Timeline</a></li>
                             <li class="nav-item"><a class="nav-link" href="#privacy"
                                     data-toggle="tab">Privacy</a></li>
                         </ul>
@@ -32,7 +34,7 @@
                                                 <span class="username"><a
                                                         href="#">{{ $post->user->username }}</a></span>
                                                 <span class="description">Shared publicly -
-                                                    {{ $post->created_at }}</span>
+                                                    {{ $post->created_at->diffForHumans() }}</span>
                                             </div>
                                             <!-- /.user-block -->
                                             <div class="card-tools">
@@ -57,9 +59,9 @@
 
                                             <!-- Attachment -->
 
-                                            @if (isset($post->post_image))
+                                            @if (isset($post->post_photo))
                                                 <img class="img-fluid pad"
-                                                    src="{{ asset('images/upload/' . $post->post_image) }}" alt="Photo">
+                                                    src="{{ asset('images/upload/' . $post->post_photo) }}" alt="Photo">
                                             @elseif (isset($post->post_video))
                                                 <video controls class="video-fluid">
                                                     <source src="{{ asset('images/upload/' . $post->post_video) }}"
@@ -203,6 +205,32 @@
                                             Info</button>
                                     </div>
                                 </form>
+                            </div>
+
+                            <div class="tab-pane" id="timeline">
+
+                                @foreach ($friendshipRequests as $friend)
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="info-box">
+                                                <span class="img-circle"><img
+                                                        src="{{ asset('images/uploads' . $friend->profile_photo) }}"
+                                                        alt="Friend photo"></span>
+                                                <div class="info-box-content">
+                                                    <a href="{{ route('Users.show', ['User' => $friend->id]) }}">
+                                                        <h3 style="color: black">{{ $friend->username }}</h3>
+                                                    </a>
+                                                    <div class="float-right">
+                                                        <a href="{{ route('Users.acceptRequest', ['User' => $friend]) }}"
+                                                            class="btn btn-lg btn-success">Accept</a>
+                                                        <a href="{{ route('Users.declineRequest', ['User' => $friend]) }}"
+                                                            class="btn btn-lg btn-danger">Decline</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </div>
 
                             <div class="tab-pane" id="privacy">
