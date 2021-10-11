@@ -33,8 +33,9 @@
                         <div class="card-header">
                             <div class="user-block">
                                 <img class="img-circle" src="{{ asset('img/user1-128x128.jpg') }}" alt="User Image">
-                                <span class="username"><a href="#">{{ $post->user->username }}</a></span>
-                                <span class="description">Shared publicly - {{ $post->created_at }}</span>
+                                <span class="username"><a href="">{{ $post->user->username }}</a></span>
+                                <span class="description">Shared publicly -
+                                    {{ $post->created_at->diffForHumans() }}</span>
                             </div>
                             <!-- /.user-block -->
                             <div class="card-tools">
@@ -59,31 +60,34 @@
 
                             <!-- Attachment -->
 
-                            @if (isset($post->post_image))
-                                <img class="img-fluid pad" src="{{ asset('images/upload/$post->post_image') }}"
+                            @if (isset($post->post_photo))
+                                <img class="img-fluid pad" src="{{ asset('images/upload/' . $post->post_photo) }}"
                                     alt="Photo">
                             @elseif (isset($post->post_video))
                                 <video controls class="video-fluid">
-                                    <source src="{{ asset('videos/upload/$post->post_video') }}" type="video">
+                                    <source src="{{ asset('videos/upload/' . $post->post_video) }}" type="video">
                                 </video>
                             @endif
                             <!-- /.attachment-block -->
 
                             <!-- Social sharing buttons -->
 
-                            <button type="button" class="btn btn-default btn-sm">
+                            <a href="{{ route('Posts.upVote', ['Post' => $post->id]) }}" class="btn btn-sm btn-default">
                                 <i class="fas fa-arrow-alt-circle-up"></i>
-                            </button>
-                            <span>Vote</span>
-                            <button type="button" class="btn btn-default btn-sm">
+                            </a>
+                            <span>
+                                @if ($post->votes->count() > 0)
+                                    {{ $post->votes->count() }}
+                                @endif
+                                Vote
+                            </span>
+                            <a href="{{ route('Posts.downVote', ['Post' => $post->id]) }}"
+                                class="btn btn-sm btn-default">
                                 <i class="fas fa-arrow-alt-circle-down"></i>
-                            </button>
-                            <button type="button" class="btn btn-default">
+                            </a>
+                            <a href="{{ route('Posts.show', ['Post' => $post->id]) }}" class="btn btn-default">
                                 <i class="fas fa-comment-dots"></i> {{ $post->comments->count() }} Comments
-                            </button>
-
-                            <button type="button" class="btn btn-default btn-sm"><i class="fas fa-share"></i>
-                                Share</button>
+                            </a>
                         </div>
                     </div>
                     <!-- /.card -->
@@ -122,7 +126,7 @@
                         <br>
                         <div class="description-block">
                             <p class="description-header"><span><i class="fas fa-stopwatch"></i></span> Created At
-                                {{ $Community->created_at }}</p>
+                                {{ $Community->created_at->diffForHumans() }}</p>
                         </div>
                         <div class="card-footer text-center">
                             <a href="{{ route('Posts.create') }}" class="btn rounded-pill btn-outline-primary btn-lg"

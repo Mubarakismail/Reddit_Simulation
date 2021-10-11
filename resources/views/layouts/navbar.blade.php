@@ -25,7 +25,7 @@
         <ul class="order-1 order-md-3 navbar-nav navbar-no-expand ml-auto">
             @if (!Auth::check())
                 <li class="nav-item">
-                    <a href=" {{ route('login') }}" class="btn btn-rounded-pill btn-outline-primary">log In</a>
+                    <a href=" {{ route('login') }}" class="btn btn-rounded-pill btn-outline-primary" style="margin-right: 15px">log In</a>
                 </li>
                 <li class="nav-item">
                     <a href=" {{ route('register') }}" class="btn btn-rounded-pill btn-primary">Sign Up</a>

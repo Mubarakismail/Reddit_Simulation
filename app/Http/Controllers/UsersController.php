@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Users\UpdateUser;
 use App\Models\Post;
 use App\Models\User;
+use App\Notifications\Friendship;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class UsersController extends Controller
@@ -17,15 +19,34 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($User)
     {
-        //
+        $user = User::findOrFail($User);
+        $posts = Post::where('user_id', '=', $user->id)->get();
+        $friendship = DB::table('friends')->where('user_id', '=', Auth::user()->id)->where('friend_id', '=', $user->id)->get();
+        if (isset($friendship) && sizeof($friendship) > 0) {
+            if ($friendship[0]->accepted && $friendship[0]->sent) {
+                $friendship = null;
+            } else if (!$friendship[0]->accepted && $friendship[0]->sent) {
+                $friendship = "Friendship request sent";
+            } else {
+                $friendship = "Add Friend";
+            }
+        } else {
+            $friendship = "Add Friend";
+        }
+        return view('User.Friend', compact('posts', 'user', 'friendship'));
     }
     public function edit($User)
     {
         $user = User::findOrFail($User);
         $posts = Post::where('user_id', '=', $User)->get();
-        return view('User.Profile', compact('user', 'posts'));
+        $friendRequestUsers = [];
+        foreach ($user->notifications as $key => $not) {
+            array_push($friendRequestUsers, $not->data['user_id']);
+        }
+        $friendshipRequests = User::whereIn('id', $friendRequestUsers)->get();
+        return view('User.Profile', compact('user', 'posts', 'friendshipRequests'));
     }
     public function update(UpdateUser $request)
     {
@@ -67,5 +88,57 @@ class UsersController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
+    }
+    public function sendRequest($User)
+    {
+        $user = User::findOrFail($User);
+        $friendship = new Request();
+        $friendship->friend_id = $user->id;
+        $friendship->user_id = Auth::user()->id;
+        $user->notify(new Friendship($friendship));
+        toastr()->success('Friendship request sent successfully');
+        DB::table('friends')->insert([
+            'user_id' => Auth::user()->id,
+            'friend_id' => $user->id,
+            'accepted' => false,
+            'sent' => true,
+        ]);
+        return redirect()->route('Users.show', ['User' => $user->id]);
+    }
+    public function acceptRequest($User)
+    {
+        $user = User::findOrFail($User);
+        $friendship = DB::table('friends')->where('user_id', '=', $user->id)
+            ->where('friend_id', '=', Auth::user()->id)->get();
+        $friendship[0]->accepted = 1;
+        $data = (array)$friendship[0];
+        DB::table('friends')->where('id', '=', $friendship[0]->id)->update($data);
+        toastr()->success($user->username . ' accept friendship request');
+        $data = "{";
+        $data .= "\"user_id\":";
+        $data .= $user->id;
+        $data .= ",\"friend_id\":";
+        $data .= Auth::user()->id;
+        $data .= "}";
+        /* dd($data); */
+        DB::table('notifications')->where('data', $data)->delete();
+        return redirect()->back();
+    }
+    public function declineRequest($User)
+    {
+        $user = User::findOrFail($User);
+        $friendship = DB::table('friends')->where('user_id', '=', $user->id)
+            ->where('friend_id', '=', Auth::user()->id)->get();
+        $friendship->sent = false;
+        $friendship->save();
+        $data = "{";
+        $data .= "\"user_id\":";
+        $data .= $user->id;
+        $data .= ",\"friend_id\":";
+        $data .= Auth::user()->id;
+        $data .= "}";
+        /* dd($data); */
+        DB::table('notifications')->where('data', $data)->delete();
+        return redirect()->back();
     }
 }

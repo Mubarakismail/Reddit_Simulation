@@ -17,9 +17,12 @@
                     <div class="card card-widget">
                         <div class="card-header">
                             <div class="user-block">
-                                <img class="img-circle" src="{{ asset('img/user1-128x128.jpg') }}" alt="User Image">
-                                <span class="username"><a href="#">{{ $post->user->username }}</a></span>
-                                <span class="description">Shared publicly - {{ $post->created_at }}</span>
+                                <img class="img-circle"
+                                    src="{{ asset('images/upload/' . $post->user->profile_photo) }}" alt="User Image">
+                                <span class="username"><a
+                                        href="{{ route('Users.show', ['User' => $post->user->id]) }}">{{ $post->user->username }}</a></span>
+                                <span class="description">Shared publicly -
+                                    {{ $post->created_at->diffForHumans() }}</span>
                             </div>
                             <!-- /.user-block -->
                             <div class="card-tools">
@@ -44,8 +47,8 @@
 
                             <!-- Attachment -->
 
-                            @if (isset($post->post_image))
-                                <img class="img-fluid pad" src="{{ asset('images/upload/$post->post_image') }}"
+                            @if (isset($post->post_photo))
+                                <img class="img-fluid pad" src="{{ asset('images/upload/' . $post->post_photo) }}"
                                     alt="Photo">
                             @elseif (isset($post->post_video))
                                 <video controls class="video-fluid">
@@ -55,14 +58,12 @@
                             <!-- /.attachment-block -->
 
                             <!-- Social sharing buttons -->
-
-
                             <a href="{{ route('Posts.upVote', ['Post' => $post->id]) }}" class="btn btn-sm btn-default">
                                 <i class="fas fa-arrow-alt-circle-up"></i>
                             </a>
                             <span>
-                                @if ($post->rating > 0)
-                                    {{ $post->rating }}
+                                @if ($post->votes->count() > 0)
+                                    {{ $post->votes->count() }}
                                 @endif
                                 Vote
                             </span>
@@ -157,7 +158,7 @@
                 <!-- Widget: Creation widget -->
                 <div class="card card-widget widget-user-2">
                     <div class="card-footer text-center">
-                        <a data-toggle="modal" data-target="createCommunity" class="btn rounded-pill btn-primary btn-lg"
+                        <a data-toggle="modal" data-target="#createCommunity" class="btn rounded-pill btn-primary btn-lg"
                             role="button" aria-pressed="true" style="margin-bottom: 10px">Create Community</a>
                         <a href="{{ route('Posts.create') }}" class="btn rounded-pill btn-outline-primary btn-lg"
                             role="button" aria-pressed="true">Create Post</a>

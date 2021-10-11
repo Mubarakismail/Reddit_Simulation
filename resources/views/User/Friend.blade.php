@@ -28,7 +28,7 @@
                                                 <span class="username"><a
                                                         href="#">{{ $post->user->username }}</a></span>
                                                 <span class="description">Shared publicly -
-                                                    {{ $post->created_at }}</span>
+                                                    {{ $post->created_at->diffForHumans() }}</span>
                                             </div>
                                             <!-- /.user-block -->
                                             <div class="card-tools">
@@ -53,34 +53,37 @@
 
                                             <!-- Attachment -->
 
-                                            @if (isset($post->post_image))
+                                            @if (isset($post->post_photo))
                                                 <img class="img-fluid pad"
-                                                    src="{{ asset('images/upload/$post->post_image') }}" alt="Photo">
+                                                    src="{{ asset('images/upload/' . $post->post_photo) }}" alt="Photo">
                                             @elseif (isset($post->post_video))
                                                 <video controls class="video-fluid">
-                                                    <source src="{{ asset('videos/upload/$post->post_video') }}"
+                                                    <source src="{{ asset('videos/upload/' . $post->post_video) }}"
                                                         type="video">
                                                 </video>
                                             @endif
                                             <!-- /.attachment-block -->
 
                                             <!-- Social sharing buttons -->
-
-                                            <button type="button" class="btn btn-default btn-sm">
+                                            <a href="{{ route('Posts.upVote', ['Post' => $post->id]) }}"
+                                                class="btn btn-sm btn-default">
                                                 <i class="fas fa-arrow-alt-circle-up"></i>
-                                            </button>
-                                            <span>Vote</span>
-                                            <button type="button" class="btn btn-default btn-sm">
+                                            </a>
+                                            <span>
+                                                @if ($post->rating > 0)
+                                                    {{ $post->rating }}
+                                                @endif
+                                                Vote
+                                            </span>
+                                            <a href="{{ route('Posts.downVote', ['Post' => $post->id]) }}"
+                                                class="btn btn-sm btn-default">
                                                 <i class="fas fa-arrow-alt-circle-down"></i>
-                                            </button>
-                                            <button type="button" class="btn btn-default">
+                                            </a>
+                                            <a href="{{ route('Posts.show', ['Post' => $post->id]) }}"
+                                                class="btn btn-default">
                                                 <i class="fas fa-comment-dots"></i> {{ $post->comments->count() }}
                                                 Comments
-                                            </button>
-
-                                            <button type="button" class="btn btn-default btn-sm"><i
-                                                    class="fas fa-share"></i>
-                                                Share</button>
+                                            </a>
                                         </div>
                                     </div>
                                     <!-- /.card -->
@@ -100,12 +103,15 @@
                     <div class="card-body box-profile">
                         <div class="text-center">
                             <img class="profile-user-img img-fluid img-circle"
-                                src="lv:{{ asset('
-                            images/uploads/$user->profile_photo') }}"
-                                alt="User profile picture">
+                                src="{{ asset('images/upload/' . $user->profile_photo) }}" alt="User profile picture">
                         </div>
-
-                        <h3 class="profile-username text-center">{{ $user->username }}</h3>
+                        @if (isset($friendship))
+                            <div class="text-center" style="margin-top: 10px">
+                                <a href="{{ route('Users.sendRequest', ['User' => $user->id]) }}"
+                                    class="btn btn-info btn-lg">{{ $friendship }}</a>
+                            </div>
+                        @endif
+                        <h3 class="profile-username text-center" style="margin-top: 10px">{{ $user->username }}</h3>
 
                         <ul class="list-group list-group-unbordered mb-3">
                             <li class="list-group-item">

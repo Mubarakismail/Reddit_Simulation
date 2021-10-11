@@ -91,8 +91,8 @@
                                     <div class="form-group">
                                         <div class="col-md-12">
                                             <p>
-                                                Drag and drop images or <button type="submit"
-                                                    class="btn btn-block btn-outline-info fileinput-button dz-clickable" name="post_photo">Upload</button>
+                                                Drag and drop images or
+                                                <input type="file" class="btn btn-info" name="post_photo">
                                             </p>
                                         </div>
                                     </div>

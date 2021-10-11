@@ -10,7 +10,7 @@ class CommunityRepository implements CommunityRepositoryInterface
 {
     public function index()
     {
-        $Communities = Community::orderBy('numberOfMembers', 'desc')->get();
+        $Communities = Community::orderBy('numberOfMembers', 'desc')->paginate(10);
         return view('Community.index', compact('Communities'));
     }
     public function show($id)
@@ -29,7 +29,7 @@ class CommunityRepository implements CommunityRepositoryInterface
             $community->description = $request->description;
             $community->save();
             toastr()->success('Community Created Successfully, Have fun');
-            return redirect()->route('Communities.show', ['id' => $community->id]);
+            return redirect()->route('Communities.show', ['Community' => $community->id]);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }
@@ -43,7 +43,7 @@ class CommunityRepository implements CommunityRepositoryInterface
             $community->description = $request->description;
             $community->save();
             toastr()->success('Community Updated Successfully, Have fun');
-            return redirect()->route('Communities.show', ['id' => $community->id]);
+            return redirect()->route('Communities.show', ['Community' => $community->id]);
         } catch (\Exception $e) {
             return redirect()->back()->withErrors(['error' => $e->getMessage()]);
         }

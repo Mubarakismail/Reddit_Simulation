@@ -53,6 +53,7 @@
                     </div>
                 @endif
                 @yield('content')
+                @include('Community.Create')
             </div>
             <!-- /.content -->
         </div>
@@ -66,11 +67,16 @@
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+    <script src="{{ asset('plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('js/adminlte.min.js') }}"></script>
+    <script src="{{ asset('js/demo.js') }}"></script>
     <script>
         $(function() {
             $('.dropdown-toggle').dropdown();
+
+            bsCustomFileInput.init();
         });
     </script>
     {{-- <!-- AdminLTE for demo purposes -->

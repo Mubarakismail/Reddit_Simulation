@@ -19,4 +19,8 @@ class Post extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function votes()
+    {
+        return $this->belongsToMany(User::class, 'user_post_vote');
+    }
 }

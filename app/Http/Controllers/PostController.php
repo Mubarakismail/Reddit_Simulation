@@ -8,6 +8,7 @@ use App\Models\Post;
 use App\Repository\PostRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -60,8 +61,12 @@ class PostController extends Controller
     {
         if (Auth::check()) {
             $post = Post::findOrFail($Post);
-            $post->rating++;
-            $post->save();
+            DB::table('user_post_vote')->where('user_id', Auth::user()->id)
+                ->where('post_id', $post->id)->delete();
+            DB::table('user_post_vote')->insert([
+                'user_id' => Auth::user()->id,
+                'post_id' => $post->id
+            ]);
             return redirect()->back();
         } else {
             return redirect('login');
@@ -71,10 +76,7 @@ class PostController extends Controller
     {
         if (Auth::check()) {
             $post = Post::findOrFail($Post);
-            $post->rating--;
-            if ($post->rating < 1)
-                $post->rating = 0;
-            $post->save();
+            DB::table('user_post_vote')->where('user_id', Auth::user()->id)->where('post_id', $post->id)->delete();
             return redirect()->back();
         } else {
             return redirect('login');

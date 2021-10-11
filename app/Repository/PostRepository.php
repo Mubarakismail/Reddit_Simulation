@@ -15,10 +15,13 @@ class PostRepository implements PostRepositoryInterface
     public function index()
     {
         if (Auth::check()) {
-            $users = DB::table('friends')->where('user_id', '=', Auth::user()->id)->get();
-            $posts = Post::whereIn('user_id', $users)
-                ->orWhere('user_id', '=', Auth::user()->id)
-                ->get();
+            $friends = DB::table('friends')->where('friend_id', '=', Auth::user()->id)->where('accepted', '=', 1)->get();
+            $idsOfFriends = [];
+            foreach ($friends as $friend) {
+                array_push($idsOfFriends, $friend->user_id);
+            }
+            $posts = Post::whereIn('user_id', $idsOfFriends)
+                ->orWhere('user_id', '=', Auth::user()->id)->get();
         } else {
             $posts = Post::where('post_privacy', 1)->get();
         }
@@ -48,18 +51,18 @@ class PostRepository implements PostRepositoryInterface
             $post = new Post();
 
             if ($request->post_photo != null) {
-                $photo_extinsion = $request->post_image->getClientOriginalExtension();
-                $photo_name = time() . $photo_extinsion;
+                $photo_extinsion = $request->post_photo->getClientOriginalExtension();
+                $photo_name = time() . '.' . $photo_extinsion;
                 $path = 'images/upload';
-                $request->post_image->move($path, $photo_name);
+                $request->post_photo->move($path, $photo_name);
                 $post->post_photo = $photo_name;
             }
 
             if ($request->post_video != null) {
                 $video_extinsion = $request->post_video->getClientOriginalExtension();
-                $video_name = time() . $video_extinsion;
+                $video_name = time() . '.' . $video_extinsion;
                 $path = 'images/upload';
-                $request->post_image->move($path, $video_name);
+                $request->post_photo->move($path, $video_name);
                 $post->post_video = $video_name;
             }
 
@@ -90,18 +93,18 @@ class PostRepository implements PostRepositoryInterface
 
             $post = Post::findOrFail($request->id);
             if ($request->post_photo != null) {
-                $photo_extinsion = $request->post_image->getClientOriginalExtension();
-                $photo_name = time() . $photo_extinsion;
+                $photo_extinsion = $request->post_photo->getClientOriginalExtension();
+                $photo_name = time() . '.' . $photo_extinsion;
                 $path = 'images/upload';
-                $request->post_image->move($path, $photo_name);
+                $request->post_photo->move($path, $photo_name);
                 $post->post_photo = $photo_name;
             }
 
             if ($request->post_video != null) {
                 $video_extinsion = $request->post_video->getClientOriginalExtension();
-                $video_name = time() . $video_extinsion;
+                $video_name = time() . '.' . $video_extinsion;
                 $path = 'images/upload';
-                $request->post_image->move($path, $video_name);
+                $request->post_photo->move($path, $video_name);
                 $post->post_video = $video_name;
             }
 
