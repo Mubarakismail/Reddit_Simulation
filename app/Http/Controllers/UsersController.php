@@ -3,29 +3,24 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\UpdateUser;
-use App\Models\Post;
-use App\Models\User;
+use App\Models\{Post, User};
 use App\Notifications\Friendship;
+use App\Traits\AttachFile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{Auth, DB, Hash};
 
 class UsersController extends Controller
 {
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    use AttachFile;
+
+    
     public function show($User)
     {
         $user = User::findOrFail($User);
         $posts = Post::where('user_id', '=', $user->id)->get();
         $friendship = DB::table('friends')->where('user_id', '=', Auth::user()->id)->where('friend_id', '=', $user->id)->get();
         if (isset($friendship) && sizeof($friendship) > 0) {
-            if ($friendship[0]->accepted && $friendship[0]->sent) {
+            if ($friendship[0]->accefpted && $friendship[0]->sent) {
                 $friendship = null;
             } else if (!$friendship[0]->accepted && $friendship[0]->sent) {
                 $friendship = "Friendship request sent";
@@ -58,10 +53,7 @@ class UsersController extends Controller
             $user->email = $request->email;
             $user->phone_number = $request->phone_number;
             if ($request->profile_photo != null) {
-                $photo_extinsion = $request->profile_photo->getClientOriginalExtension();
-                $photo_name = time() . '.' . $photo_extinsion;
-                $path = 'images/upload';
-                $request->profile_photo->move($path, $photo_name);
+                $photo_name = $this->UploadFile($request->profile_photo, 'images/upload');
                 $user->profile_photo = $photo_name;
             }
             $user->gender = $request->gender;
@@ -114,13 +106,7 @@ class UsersController extends Controller
         $data = (array)$friendship[0];
         DB::table('friends')->where('id', '=', $friendship[0]->id)->update($data);
         toastr()->success($user->username . ' accept friendship request');
-        $data = "{";
-        $data .= "\"user_id\":";
-        $data .= $user->id;
-        $data .= ",\"friend_id\":";
-        $data .= Auth::user()->id;
-        $data .= "}";
-        /* dd($data); */
+        $data = $this->buildNotificationString($user->id, Auth::user()->id);
         DB::table('notifications')->where('data', $data)->delete();
         return redirect()->back();
     }
@@ -131,13 +117,7 @@ class UsersController extends Controller
             ->where('friend_id', '=', Auth::user()->id)->get();
         $friendship->sent = false;
         $friendship->save();
-        $data = "{";
-        $data .= "\"user_id\":";
-        $data .= $user->id;
-        $data .= ",\"friend_id\":";
-        $data .= Auth::user()->id;
-        $data .= "}";
-        /* dd($data); */
+        $data = $this->buildNotificationString($user->id, Auth::user()->id);
         DB::table('notifications')->where('data', $data)->delete();
         return redirect()->back();
     }

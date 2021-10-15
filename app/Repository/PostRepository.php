@@ -7,11 +7,14 @@ use App\Models\Community;
 use App\Models\community_tag;
 use App\Models\Post;
 use App\Models\User;
+use App\Traits\AttachFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class PostRepository implements PostRepositoryInterface
 {
+    use AttachFile;
+
     public function index()
     {
         if (Auth::check()) {
@@ -51,18 +54,12 @@ class PostRepository implements PostRepositoryInterface
             $post = new Post();
 
             if ($request->post_photo != null) {
-                $photo_extinsion = $request->post_photo->getClientOriginalExtension();
-                $photo_name = time() . '.' . $photo_extinsion;
-                $path = 'images/upload';
-                $request->post_photo->move($path, $photo_name);
+                $photo_name = $this->UploadFile($request->post_photo, 'images/upload');
                 $post->post_photo = $photo_name;
             }
 
             if ($request->post_video != null) {
-                $video_extinsion = $request->post_video->getClientOriginalExtension();
-                $video_name = time() . '.' . $video_extinsion;
-                $path = 'images/upload';
-                $request->post_photo->move($path, $video_name);
+                $video_name = $this->UploadFile($request->post_video, 'videos/upload');
                 $post->post_video = $video_name;
             }
 
@@ -93,18 +90,12 @@ class PostRepository implements PostRepositoryInterface
 
             $post = Post::findOrFail($request->id);
             if ($request->post_photo != null) {
-                $photo_extinsion = $request->post_photo->getClientOriginalExtension();
-                $photo_name = time() . '.' . $photo_extinsion;
-                $path = 'images/upload';
-                $request->post_photo->move($path, $photo_name);
+                $photo_name = $this->UploadFile($request->post_photo, 'images/upload');
                 $post->post_photo = $photo_name;
             }
 
             if ($request->post_video != null) {
-                $video_extinsion = $request->post_video->getClientOriginalExtension();
-                $video_name = time() . '.' . $video_extinsion;
-                $path = 'images/upload';
-                $request->post_photo->move($path, $video_name);
+                $video_name = $this->UploadFile($request->post_video, 'videos/upload');
                 $post->post_video = $video_name;
             }
 
